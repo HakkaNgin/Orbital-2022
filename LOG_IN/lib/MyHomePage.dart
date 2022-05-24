@@ -25,15 +25,13 @@ class MyHomePageState extends State<MyHomePage> {
                     )
                 ),
               ),
-              Image.asset('assets/images/NUS_LOGO.png'),
+              Image.asset('assets/images/NUS_LOGO.png', width: 200),
               Padding (
                 padding: EdgeInsets.fromLTRB(0,100,0,10),
                 child: Row ( children: <Widget> [
                     Padding (
-                      padding: EdgeInsets.fromLTRB(175,0,150,0),
-                      child: RaisedButton (
-                          color: Colors.white,
-                          textColor: Colors.black,
+                      padding: EdgeInsets.fromLTRB(150,0,150,0),
+                      child: OutlinedButton (
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder:(context) {
                               return  LogInPage();
@@ -41,7 +39,8 @@ class MyHomePageState extends State<MyHomePage> {
                           },
                           child: Text(
                               "LOG IN",
-                              style: TextStyle(fontSize: 20
+                              style: TextStyle(fontSize: 20,
+                                color: Colors.black
                               )
                           )
                       ),
