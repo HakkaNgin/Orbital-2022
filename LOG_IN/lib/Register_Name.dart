@@ -35,9 +35,7 @@ class Register_NameState extends State<Register_Name> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(0,50,0,10),
-              child: RaisedButton (
-                  color: Colors.white,
-                  textColor: Colors.black,
+              child: ElevatedButton (
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder:(context) {
                       return  MyHomePage();
@@ -45,7 +43,8 @@ class Register_NameState extends State<Register_Name> {
                   },
                   child: Text(
                       "SIGN UP",
-                      style: TextStyle(fontSize: 25
+                      style: TextStyle(fontSize: 25,
+                        color: Colors.white
                       )
                   )
               ),
