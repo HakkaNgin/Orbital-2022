@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log_in/models/user.dart';
+import 'package:log_in/screens/page/chats_screen.dart';
 import 'package:log_in/screens/page/profile_page.dart';
 import 'package:log_in/screens/page/search.dart';
 import 'package:log_in/services/auth.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   int index = 0;
-  final screens = [Search()];
+  // final screens = [Search()];
   final AuthService _auth = AuthService();
 
   final usersRef = FirebaseFirestore.instance.collection('users');
@@ -85,6 +86,18 @@ class _HomeScreenState extends State<HomeScreen> {
   //   Navigator.push(context, MaterialPageRoute(builder: (context) => InitialPage()));
   // }
 
+  changePage(int pageIndex) {
+    if (pageIndex == 0) {
+      return ChatPage();
+    }
+    if (pageIndex == 1) {
+      return Search();
+    }
+    if (pageIndex == 2) {
+      return ProfilePage(currentUser: widget.theCurrentUser);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // IMPORTANT!!
@@ -109,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //   ],
       // ),
 
-      body: index == 0 ? ProfilePage(currentUser: widget.theCurrentUser) : screens[index - 1],
+      body: changePage(index),
 
       // TODO version 2 stuff
       // body: PageView(
@@ -154,22 +167,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
           destinations: [
             NavigationDestination(
-                icon: Icon(Icons.person),
-                selectedIcon: Icon(Icons.person),
-                label: 'Profile',
+              icon: Icon(Icons.chat_bubble),
+              selectedIcon: Icon(Icons.chat_bubble),
+              label: 'Message',
             ),
             NavigationDestination(
               icon: Icon(Icons.search),
               selectedIcon: Icon(Icons.search),
               label: 'Search',
             ),
+            NavigationDestination(
+              icon: Icon(Icons.person),
+              selectedIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
             // NavigationDestination(
-            //   icon: Icon(Icons.chat_bubble),
-            //   selectedIcon: Icon(Icons.group),
-            //   label: 'Profile',
-            // ),
-            // NavigationDestination(
-            //   icon: Icon(Icons.videocam),
+            //   icon: Icon(Icons.group),
             //   selectedIcon: Icon(Icons.videocam),
             //   label: 'NFC',
             // ),
