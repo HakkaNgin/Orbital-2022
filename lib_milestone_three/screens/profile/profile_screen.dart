@@ -285,12 +285,14 @@ class _ProfilePageController extends State<ProfilePage> {
           builder: (context) => Chat(chatRoomId: chatRoomId1),
         ),
       ).then((value) => setState(() {}));
+
     } else if (chatRoomTwoExists) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Chat(chatRoomId: chatRoomId2),
         ),
       ).then((value) => setState(() {}));
+      
     } else {
       await DatabaseMethods().addChatRoom(widget.profileUserID, profileUser.username, profileUser.imagePath);
       Navigator.of(context).push(
