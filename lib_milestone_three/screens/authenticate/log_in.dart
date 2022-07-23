@@ -12,18 +12,6 @@ import '../home/home.dart';
 final usersRef = FirebaseFirestore.instance.collection('users');
 late TheUser currentUser;
 
-class EmailFieldValidator {
-  static String? validate(String? value) {
-    return value!.isEmpty ? 'Enter an email' : null;
-  }
-}
-
-class PasswordFieldValidator {
-  static String? validate(String? value) {
-    return value!.length < 6 ? 'Enter a password at least 6 characters long' : null;
-  }
-}
-
 class LogInPage extends StatefulWidget {
   @override
   LogInPageState createState() => LogInPageState();
@@ -60,9 +48,9 @@ class LogInPageState extends State<LogInPage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(10,0,10,0),
                 child: TextFormField(
-                  key: Key("Enter email address"),
+
                   // autovalidateMode: AutovalidateMode.always,
-                  validator: EmailFieldValidator.validate,
+                  validator: (value) => value!.isEmpty ? 'Enter an email' : null,
                   autofocus: true,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -81,10 +69,11 @@ class LogInPageState extends State<LogInPage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(10,0,10,0),
                 child: TextFormField(
-                  key: Key("Enter password"),
+
                   // autovalidateMode: AutovalidateMode.always,
                   obscureText: true,
-                  validator: PasswordFieldValidator.validate,
+                  validator: (value) => value!.length < 6 ? 'Enter a password at least 6 characters long' : null,
+
                   decoration: InputDecoration(
                       labelText: "PASSWORD",
                       labelStyle: TextStyle(fontSize: 20.0),
@@ -103,7 +92,6 @@ class LogInPageState extends State<LogInPage> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0,10,0,10),
                     child: RaisedButton (
-                        key: Key("Log In"),
                         onPressed: () async {
                           setState(() => error = '');
                           if (_formKey.currentState!.validate()) {
@@ -111,18 +99,13 @@ class LogInPageState extends State<LogInPage> {
                             dynamic result = await _auth.loginWithEmailAndPassword(_email, _password);
                             if (result == null) {
                               setState(() {
-                                error = 'Email and password do not match';
+                                error = 'Could not sign in, please check you password';
                                 loading = false;
                               });
                             } else if (result == 1) {
                               setState(() {
                                 error = 'No corresponding account found';
                                 noAccount = true;
-                                loading = false;
-                              });
-                            } else if (result == 2) {
-                              setState(() {
-                                error = 'Please enter a valid email address';
                                 loading = false;
                               });
                             } else { // successful login
