@@ -292,7 +292,7 @@ class _ProfilePageController extends State<ProfilePage> {
           builder: (context) => Chat(chatRoomId: chatRoomId2),
         ),
       ).then((value) => setState(() {}));
-
+      
     } else {
       await DatabaseMethods().addChatRoom(widget.profileUserID, profileUser.username, profileUser.imagePath);
       Navigator.of(context).push(
@@ -382,7 +382,7 @@ class _ProfilePageView extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(top: 12.0),
                 child: Text(
-                  user.username + " (" + user.email + ")",
+                  user.username,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0,

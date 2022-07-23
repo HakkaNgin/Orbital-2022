@@ -87,7 +87,7 @@ class _SearchController extends State<Search> {
           controller: searchController,
           decoration: InputDecoration(
             hintText: "Find user by name/ acad info/ tags",
-            hintMaxLines: 2,
+            hintMaxLines: 1,
             filled: true,
             prefixIcon: Icon(
               Icons.account_box,

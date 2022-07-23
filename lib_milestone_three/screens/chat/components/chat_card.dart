@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:log_in/screens/chat/components/chat.dart';
 
 class ChatCard extends StatelessWidget {
@@ -19,9 +18,6 @@ class ChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime log = DateTime.fromMicrosecondsSinceEpoch(timestamp.microsecondsSinceEpoch);
-    String lastTime = DateFormat('yyyy-MM-dd kk:mm').format(log);
-
     return GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(
@@ -85,7 +81,7 @@ class ChatCard extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              lastTime,
+                              timestamp.toDate().toString(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
