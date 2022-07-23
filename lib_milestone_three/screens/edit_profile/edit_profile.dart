@@ -267,7 +267,7 @@ class _EditProfileController extends State<EditProfile> {
           : _displaynameValid = true;
 
       acadInfoController.text.trim().length < 2 ? _acadInfoValid = false : _acadInfoValid = true;
-      bioController.text.trim().length > 100 ? _bioValid = false : _bioValid = true;
+      bioController.text.trim().length > 100 || bioController.text.trim().length < 2 ? _bioValid = false : _bioValid = true;
     });
 
     if (_displaynameValid && _acadInfoValid && _bioValid) {
@@ -453,7 +453,7 @@ class _EditProfileView extends StatelessWidget {
           controller: state.bioController,
           decoration: InputDecoration(
             hintText: "Update Bio",
-            errorText: state._bioValid ? null : "Bio is too long",
+            errorText: state._bioValid ? null : "Bio must be between 2 - 100 characters",
           ),
         )
       ],
