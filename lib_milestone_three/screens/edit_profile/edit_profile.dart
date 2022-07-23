@@ -267,7 +267,6 @@ class _EditProfileController extends State<EditProfile> {
           : _displaynameValid = true;
 
       acadInfoController.text.trim().length < 2 ? _acadInfoValid = false : _acadInfoValid = true;
-
       bioController.text.trim().length > 100 ? _bioValid = false : _bioValid = true;
     });
 

@@ -1,8 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/firebase_login_user.dart';
 
+abstract class BaseAuth {
+  Future loginWithEmailAndPassword(String email, String password);
+  Future registerWithEmailAndPassword(String email, String password);
+  Stream<LoginUser?>? get user;
+  Future authSignOut();
+}
 
-class AuthService {
+class AuthService implements BaseAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // create user obj based on FireBaseUser
@@ -24,9 +30,11 @@ class AuthService {
       User? user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-
+      print(e);
       if (e.toString() == "[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.") {
         return 1;
+      } else if (e.toString() == "[firebase_auth/invalid-email] The email address is badly formatted."){
+        return 2;
       } else {
         return null;
       }
