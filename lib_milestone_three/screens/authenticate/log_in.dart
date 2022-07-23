@@ -48,6 +48,7 @@ class LogInPageState extends State<LogInPage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(10,0,10,0),
                 child: TextFormField(
+
                   // autovalidateMode: AutovalidateMode.always,
                   validator: (value) => value!.isEmpty ? 'Enter an email' : null,
                   autofocus: true,
@@ -68,9 +69,11 @@ class LogInPageState extends State<LogInPage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(10,0,10,0),
                 child: TextFormField(
+
                   // autovalidateMode: AutovalidateMode.always,
                   obscureText: true,
                   validator: (value) => value!.length < 6 ? 'Enter a password at least 6 characters long' : null,
+
                   decoration: InputDecoration(
                       labelText: "PASSWORD",
                       labelStyle: TextStyle(fontSize: 20.0),

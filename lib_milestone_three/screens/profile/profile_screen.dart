@@ -382,7 +382,7 @@ class _ProfilePageView extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(top: 12.0),
                 child: Text(
-                  user.username,
+                  user.username + " (" + user.email + ")",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0,
