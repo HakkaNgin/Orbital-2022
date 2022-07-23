@@ -109,28 +109,33 @@ class LogInPageState extends State<LogInPage> {
                           if (_formKey.currentState!.validate()) {
                             setState(() => loading = true);
                             dynamic result = await _auth.loginWithEmailAndPassword(_email, _password);
+                            
                             if (result == null) {
                               setState(() {
                                 error = 'Email and password do not match';
                                 loading = false;
                               });
+                              
                             } else if (result == 1) {
                               setState(() {
                                 error = 'No corresponding account found';
                                 noAccount = true;
                                 loading = false;
                               });
+                              
                             } else if (result == 2) {
                               setState(() {
                                 error = 'Please enter a valid email address';
                                 loading = false;
                               });
+
                             } else { // successful login
                               bool emailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
                               // if (!emailVerified) {
                               //   await Navigator.push(context, MaterialPageRoute(
                               //       builder: (context) => VerifyEmailPage()));
                               // }
+                              
                               await retrieveUserInFirestore(result);
                               loading = false;
                               // TODO NOTE pushReplacement destroys the previous screen and puts the next screen in stack
