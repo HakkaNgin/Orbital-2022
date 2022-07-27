@@ -157,8 +157,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               "imagePath": "",
                             });
                             // print("SSDSADFWEFESFDFZDGSDGSGSDFGSDFSDFEFFEF");
-                            await Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => VerifyEmailPage()));
+                            // await Navigator.push(context, MaterialPageRoute(
+                            //     builder: (context) => VerifyEmailPage()));
+
                             await createUserInFirestore(result); // create corresponding user in firestore
                             loading = false;
                             Navigator.of(context).pushReplacement(
