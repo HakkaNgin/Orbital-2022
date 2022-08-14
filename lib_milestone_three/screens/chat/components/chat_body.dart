@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:log_in/models/user.dart';
@@ -45,17 +47,19 @@ class _ChatBodyState extends State<ChatBody> {
                 return ListView.builder(
                     itemCount: (snapshot.data! as QuerySnapshot).docs.length,
                     itemBuilder: (context, index) {
+                      List nameArray = (snapshot.data! as QuerySnapshot)
+                          .docs[index].get('name');
+                      String otherUserName = nameArray[0] == homeCurrentUser.username ? nameArray[1] : nameArray[0];
+
+                      List imageArray = (snapshot.data! as QuerySnapshot)
+                          .docs[index].get('imagePath');
+                      String otherUserImagePath = imageArray[0] == homeCurrentUser.imagePath ? imageArray[1] : imageArray[0];
+
                       return ChatCard(
-                        userName: (snapshot.data! as QuerySnapshot)
-                            .docs[index].get('name')
-                            .replaceAll("_", "").replaceAll(
-                            homeCurrentUser.username, ''),
+                        userName: otherUserName,
                         chatRoomId: (snapshot.data! as QuerySnapshot)
                             .docs[index].get('chatRoomId'),
-                        imagePath: (snapshot.data! as QuerySnapshot)
-                            .docs[index].get('imagePath')
-                            .replaceAll("_", "").replaceAll(
-                            homeCurrentUser.imagePath, ''),
+                        imagePath: otherUserImagePath,
                         lastMessage: (snapshot.data! as QuerySnapshot)
                             .docs[index].get('lastMessage'),
                         timestamp: (snapshot.data! as QuerySnapshot)
