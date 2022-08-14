@@ -16,12 +16,15 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   Stream<QuerySnapshot>? chats;
   TextEditingController messageEditingController = new TextEditingController();
+  ScrollController listScrollController = ScrollController();
 
-  Widget chatMessages(){
+  Widget chatMessages() {
     return StreamBuilder(
       stream: chats,
       builder: (context, snapshot){
         return snapshot.hasData ?  ListView.builder(
+          controller: listScrollController,
+          shrinkWrap: true,
           itemCount: (snapshot.data! as QuerySnapshot).docs.length,
           itemBuilder: (context, index) {
             return MessageCard(
@@ -60,59 +63,72 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+
+    // makes sure that the list of messages gets displayed from the bottom
+    if (listScrollController.hasClients) {
+      final position = listScrollController.position.maxScrollExtent;
+      listScrollController.jumpTo(position);
+    }
+
     return Scaffold(
-      body: Container(
-        child: Stack(
+      resizeToAvoidBottomInset: true,
+      body: Column (
           children: [
-            chatMessages(),
-            Container(
+            Flexible(
+              flex: 1,
+                fit: FlexFit.tight,
+                child: chatMessages(),
+            ),
+            Align(
               alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                color: Colors.blueGrey,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                          controller: messageEditingController,
-                          decoration: InputDecoration(
-                              hintText: "Message ...",
-                              hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold),
-                              border: InputBorder.none),
-                        )
-                    ),
-                    SizedBox(width: 16),
-                    GestureDetector(
-                      onTap: () {
-                        addMessage();
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  colors: [Colors.white, Colors.grey],
-                                  begin: FractionalOffset.topLeft,
-                                  end: FractionalOffset.bottomRight
-                              ),
-                              borderRadius: BorderRadius.circular(40)
-                          ),
-                          padding: EdgeInsets.all(10),
-                          child: Image.asset("assets/images/send.png", height: 40, width: 40,)
+                alignment: Alignment.bottomCenter,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  color: Colors.blueGrey,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: TextField(
+                            controller: messageEditingController,
+                            decoration: InputDecoration(
+                                hintText: "Message ...",
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold),
+                                border: InputBorder.none),
+                          )
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 16),
+                      GestureDetector(
+                        onTap: () {
+                          addMessage();
+                        },
+                        child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [Colors.white, Colors.grey],
+                                    begin: FractionalOffset.topLeft,
+                                    end: FractionalOffset.bottomRight
+                                ),
+                                borderRadius: BorderRadius.circular(40)
+                            ),
+                            padding: EdgeInsets.all(10),
+                            child: Image.asset("assets/images/send.png", height: 40, width: 40,)
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

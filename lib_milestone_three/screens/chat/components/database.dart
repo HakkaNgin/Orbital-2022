@@ -15,11 +15,15 @@ class DatabaseMethods {
       'lastMessage':'',
       'lastMessageTimestamp':'',
       'chatRoomId': chatRoomID,
-      'name': homeCurrentUser.username + "_" + otherName,
-      'imagePath': homeCurrentUser.imagePath + "_" + otherPath,
+      'name': [
+        homeCurrentUser.username,
+        otherName ],
+      'imagePath': [
+        homeCurrentUser.imagePath,
+        otherPath ],
       'users': [
           homeCurrentUser.userID,
-          otherUserID ]
+          otherUserID ],
     }).catchError((e) {
       print(e);
     });

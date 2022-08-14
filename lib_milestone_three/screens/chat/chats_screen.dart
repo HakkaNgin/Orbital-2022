@@ -20,14 +20,14 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: buildAppBar(),
       body: ChatBody (ID: widget.ID),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        backgroundColor: Colors.orange,
-        child: Icon(
-          Icons.person_add_alt_1,
-          color: Colors.white,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: (){},
+      //   backgroundColor: Colors.orange,
+      //   child: Icon(
+      //     Icons.person_add_alt_1,
+      //     color: Colors.white,
+      //   ),
+      // ),
     );
   }
 
@@ -41,12 +41,12 @@ class _ChatPageState extends State<ChatPage> {
             fontSize: 24
         ),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {},
-        ),
-      ],
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.search),
+      //     onPressed: () {},
+      //   ),
+      // ],
     );
   }
 }
