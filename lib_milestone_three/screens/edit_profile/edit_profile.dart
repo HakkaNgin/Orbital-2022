@@ -7,11 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:log_in/screens/home/home.dart';
+import 'package:log_in/screens/profile/profile_screen.dart';
 import 'package:log_in/shared/loading.dart';
 import '../../models/user.dart';
 import '../../services/auth.dart';
 import '../../shared/progress.dart';
-import '../authenticate/register.dart';
+// import '../authenticate/register.dart';
 import '../initial_screen/initial_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
@@ -62,6 +64,7 @@ class _EditProfileController extends State<EditProfile> {
   String? mediaUrl;
   final ImagePicker _picker = ImagePicker();
   final Reference storageRef = FirebaseStorage.instance.ref();
+  final chatsRef = FirebaseFirestore.instance.collection('ChatRoom');
 
   ImageProvider? profileImage;
   bool detectedNewImage = false;
@@ -219,6 +222,7 @@ class _EditProfileController extends State<EditProfile> {
   }
 
   handleSubmit() async {
+    String prevImagePath = homeCurrentUser.imagePath;
     loading = true;
     // setState(() {
     //   isUploading = true;
@@ -233,6 +237,46 @@ class _EditProfileController extends State<EditProfile> {
       // .then((value) {
       // getFollowers();
       // })
+      await chatsRef.get().then((QuerySnapshot allConversations) {
+        allConversations.docs.forEach((QueryDocumentSnapshot conversation) async {
+          // DocumentSnapshot convo = await conversation.reference.get();
+          // List nameArray = conversation.get('name');
+          List imageArray = conversation.get('imagePath');
+
+          if (imageArray[0] == prevImagePath) {
+            imageArray[0] = mediaUrl;
+          } else {
+            imageArray[1] = mediaUrl;
+          }
+
+          conversation.reference.update({
+            'imagePath': imageArray,
+          });
+        });
+      });
+
+      activityFeedRef.get().then((QuerySnapshot allUsersWithActivities) {
+        allUsersWithActivities.docs.forEach((QueryDocumentSnapshot userWithActivity) async {
+          // DocumentSnapshot convo = await conversation.reference.get();
+          userWithActivity.reference.collection('feedItems').get().then((feedItems) {
+            feedItems.docs.forEach((QueryDocumentSnapshot feedItem) {
+
+              String? followerImagePath = feedItem.get('imagePath');
+              // List imageArray = conversation.get('imagePath');
+
+              if (followerImagePath == prevImagePath) {
+                followerImagePath = mediaUrl ?? "";
+              }
+
+              feedItem.reference.update({
+                'imagePath': mediaUrl,
+                // 'imagePath': [mediaUrl, 'asdasdsa'],
+              });
+            });
+          });
+        });
+      });
+
       setState(() {
         loading = false;
       });
@@ -267,10 +311,14 @@ class _EditProfileController extends State<EditProfile> {
           : _displaynameValid = true;
 
       acadInfoController.text.trim().length < 2 ? _acadInfoValid = false : _acadInfoValid = true;
+
       bioController.text.trim().length > 100 || bioController.text.trim().length < 2 ? _bioValid = false : _bioValid = true;
     });
 
     if (_displaynameValid && _acadInfoValid && _bioValid) {
+
+      String prevName = homeCurrentUser.username;
+
       usersRef.doc(widget.profileUserID).update({
         "username": displayNameController.text,
         "username_lowercase": displayNameController.text.toLowerCase(),
@@ -287,6 +335,48 @@ class _EditProfileController extends State<EditProfile> {
         "link2": link2Controller.text == null ? "" : link2Controller.text,
         "link3": link3Controller.text == null ? "" : link3Controller.text,
       });
+
+      chatsRef.get().then((QuerySnapshot allConversations) {
+        allConversations.docs.forEach((QueryDocumentSnapshot conversation) async {
+          // DocumentSnapshot convo = await conversation.reference.get();
+          List nameArray = conversation.get('name');
+          // List imageArray = conversation.get('imagePath');
+
+          if (nameArray[0] == prevName) {
+            nameArray[0] = displayNameController.text;
+          } else {
+            nameArray[1] = displayNameController.text;
+          }
+
+          conversation.reference.update({
+            'name': nameArray,
+            // 'imagePath': [mediaUrl, 'asdasdsa'],
+          });
+        });
+      });
+
+      activityFeedRef.get().then((QuerySnapshot allUsersWithActivities) {
+        allUsersWithActivities.docs.forEach((QueryDocumentSnapshot userWithActivity) async {
+          // DocumentSnapshot convo = await conversation.reference.get();
+          userWithActivity.reference.collection('feedItems').get().then((feedItems) {
+            feedItems.docs.forEach((QueryDocumentSnapshot feedItem) {
+
+              String followerName = feedItem.get('username');
+              // List imageArray = conversation.get('imagePath');
+
+              if (followerName == prevName) {
+                followerName = displayNameController.text;
+              }
+
+              feedItem.reference.update({
+                'username': followerName,
+                // 'imagePath': [mediaUrl, 'asdasdsa'],
+              });
+            });
+          });
+        });
+      });
+      
       SnackBar snackbar = SnackBar(content: Text("Profile updated!"));
       _scaffoldKey.currentState!.showSnackBar(snackbar);
     } else {
